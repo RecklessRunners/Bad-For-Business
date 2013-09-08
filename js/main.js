@@ -11,6 +11,7 @@ $(function(){
 	
 	// Variables
 	gameStatus = "2.0";
+	dimming = 0;
 	
 	// 1st number	2nd number	Mean
 	////////////////////////////////////////
@@ -36,27 +37,44 @@ $(function(){
 		
 		switch(gameStatus){
 			case "2.0":
-				// Draw a studio logo
-				writeText("Warped Matter",canvas.width/2,canvas.height/2-64,"192px 'Flavors'","#FFF","center");
-				writeText("TM",canvas.width/10*7,canvas.height/2-256,"24px 'Oxygen'","#FFF","center");
-				console.log("jjj");
-			break;
 			case "2.1":
-				// Draw a game logo
-				writeText("Bad For Business",canvas.width/2,canvas.height/2-64,"192px 'Flavors'","#FFF","center");
+				// Draw a studio logo
+				ctx.globalAlpha = Math.max(dimming,0.01);
+				writeText("Warped Matter",canvas.width/2,canvas.height/2-96,"192px 'Flavors'","#FFF","center");
 				writeText("TM",canvas.width/10*7,canvas.height/2-256,"24px 'Oxygen'","#FFF","center");
+				if(gameStatus == "2.0"){
+					if(dimming < 2.5){
+						dimming += 0.02;
+					}else{
+						gameStatus = "2.1";
+					}
+				}else{
+					if(dimming >= 0){
+						dimming -= 0.02;
+					}else{
+						gameStatus = "2.2";
+					}
+				}
+				ctx.globalAlpha = 1;
 			break;
 			case "2.2":
-				// Loading screen
-				writeText("Loading",canvas.width/2,canvas.height/2-16,"32px 'Oxygen'","#FFF","center");
+			case "2.3":
+				// Draw a game logo
+				ctx.globalAlpha = Math.max(dimming,0.01);
+				writeText("Bad For Business",canvas.width/2,canvas.height/2-64,"192px 'Cinzel'","#FFF","center");
+				writeText("A Story About How Real Business World Works",canvas.width/2,canvas.height/2+24,"48px 'Cinzel'","#FFF","center");
+				writeText("TM",canvas.width/10*8,canvas.height/2-256,"24px 'Oxygen'","#FFF","center");
+				if(dimming < 1.5){
+					dimming += 0.02;
+				}else{
+					gameStatus = "2.3";
+				}
+				ctx.globalAlpha = 1;
+				if(gameStatus == "2.3"){
+					// Loading screen
+					writeText("– This tooks a time, please be patient –",canvas.width/2,canvas.height/2+256,"32px 'Oxygen'","#FFF","center");
+				}
 			break;
 		}
 	}
-	
-	setTimeout(function(){
-		gameStatus = "2.1";
-		setTimeout(function(){
-			gameStatus = "2.2";
-		},3000);
-	},3000);
 });
