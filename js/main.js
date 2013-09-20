@@ -12,6 +12,7 @@ $(function(){
 	// Variables
 	gameStatus = "2.0";
 	dimming = 0;
+	loadingDots = canvas.width/2;
 	
 	// 1st number	2nd number	Mean
 	////////////////////////////////////////
@@ -43,14 +44,14 @@ $(function(){
 				writeText("Warped Matter",canvas.width/2,canvas.height/2-96,"192px 'Flavors'","#FFF","center");
 				writeText("TM",canvas.width/10*7,canvas.height/2-256,"24px 'Oxygen'","#FFF","center");
 				if(gameStatus == "2.0"){
-					if(dimming < 2.5){
-						dimming += 0.02;
+					if(dimming < 1.5){
+						dimming += 0.025;
 					}else{
 						gameStatus = "2.1";
 					}
 				}else{
 					if(dimming >= 0){
-						dimming -= 0.02;
+						dimming -= 0.025;
 					}else{
 						gameStatus = "2.2";
 					}
@@ -65,14 +66,21 @@ $(function(){
 				writeText("A Story About How Real Business World Works",canvas.width/2,canvas.height/2+24,"48px 'Cinzel'","#FFF","center");
 				writeText("TM",canvas.width/10*8,canvas.height/2-256,"24px 'Oxygen'","#FFF","center");
 				if(dimming < 1.5){
-					dimming += 0.02;
+					dimming += 0.025;
 				}else{
 					gameStatus = "2.3";
 				}
 				ctx.globalAlpha = 1;
 				if(gameStatus == "2.3"){
 					// Loading screen
-					writeText("– This tooks a time, please be patient –",canvas.width/2,canvas.height/2+256,"32px 'Oxygen'","#FFF","center");
+					//writeText("This takes it's time",canvas.width/2,canvas.height/2+256,"32px 'Oxygen'","#FFF","center");
+					loadingDots += 190/(canvas.width/2)*Math.abs(loadingDots-canvas.width/2)+10;
+					for(i=0;i<10;i++){
+						writeText("·",loadingDots-(Math.max(32,32/(canvas.width/2)*Math.abs(loadingDots-canvas.width/2))*i),canvas.height/2+256+64,"bold 48px 'Oxygen'","#808080","center");
+					}
+					if(loadingDots > canvas.width + 300){
+						loadingDots = -300;
+					}
 				}
 			break;
 		}
