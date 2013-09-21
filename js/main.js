@@ -10,7 +10,7 @@ $(function(){
 	}
 	
 	// Variables
-	gameStatus = "2.0";
+	gameStatus = "2.1";
 	dimming = loadedFiles = allFiles = 0;
 	images = {};
 	loadingDots = canvas.width / 2;
@@ -25,7 +25,8 @@ $(function(){
 	///////////////////////////////////////
 	
 	// Load images
-	loadImg("pawn",3);
+	loadImg("pawn",4);
+	loadImg("smiley",0);
 	
 	// Run drawScreen() every 50ms (approx. 20 times per second)
 	setInterval(function(){
@@ -73,22 +74,34 @@ $(function(){
 				if(dimming < 1.5){
 					dimming += 0.025;
 				}else{
-					gameStatus = "2.3";
+					if(gameStatus == "2.2"){
+						loadingDots = -300;
+						gameStatus = "2.3";
+					}
 				}
 				ctx.globalAlpha = 1;
 				if(gameStatus == "2.3"){
 					// Loading screen
-					//writeText("This takes it's time",canvas.width/2,canvas.height/2+256,"32px 'Oxygen'","#FFF","center");
 					loadingDots += 190/(canvas.width/2)*Math.abs(loadingDots-canvas.width/2)+10;
 					for(i=0;i<10;i++){
 						writeText("·",loadingDots-(Math.max(32,32/(canvas.width/2)*Math.abs(loadingDots-canvas.width/2))*i),canvas.height/2+256+64,"bold 48px 'Oxygen'","#808080","center");
 					}
-					for(mainMenuPawns=0;mainMenuPawns<=3;mainMenuPawns++){
-						ctx.drawImage(images["pawn"+mainMenuPawns],canvas.width/6*(1+mainMenuPawns)+96,canvas.height-384,192,192);
-					}
-					if(loadingDots > canvas.width + 300 /*&& loadedFiles < allFiles*/){
+					if(loadingDots > canvas.width + 300){
 						loadingDots = -300;
+						if(loadedFiles >= allFiles){
+							gameStatus = "0.0";
+						}
 					}
+				}
+			break;
+			case "0.0":
+				writeText("Please select players",canvas.width/2,canvas.height-384-96,"32px sans-serif","#FFF","center");
+				
+				for(mainMenuPawns=0;mainMenuPawns<=4;mainMenuPawns++){
+					ctx.globalAlpha=0.25;
+					ctx.drawImage(images["pawn"+mainMenuPawns],canvas.width/7*(1+mainMenuPawns)+144,canvas.height-384,192,192);
+					ctx.globalAlpha=1;
+					ctx.drawImage(images["smiley0"],canvas.width/7*(1+mainMenuPawns)+144+96-32,canvas.height-288);
 				}
 			break;
 		}
