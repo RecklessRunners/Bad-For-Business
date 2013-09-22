@@ -10,8 +10,9 @@ $(function(){
 	}
 	
 	// Variables
-	gameStatus = "2.1";
+	gameStatus = "2.0";
 	dimming = loadedFiles = allFiles = 0;
+	cPos = {"x":0,"y":0};
 	images = {};
 	loadingDots = canvas.width / 2;
 	
@@ -75,7 +76,7 @@ $(function(){
 					dimming += 0.025;
 				}else{
 					if(gameStatus == "2.2"){
-						loadingDots = -300;
+						loadingDots = canvas.width + 300;
 						gameStatus = "2.3";
 					}
 				}
@@ -95,17 +96,53 @@ $(function(){
 				}
 			break;
 			case "0.0":
-				writeText("Please select players",canvas.width/2,canvas.height-384-96,"32px sans-serif","#FFF","center");
+				// Draw pawns
+				writeText("Bad For Business",canvas.width/2,608,"96px 'Cinzel'","#FFF","center");
+				writeText("Add player to new game",canvas.width/2,704,"32px sans-serif","#FFF","center");
 				
 				for(mainMenuPawns=0;mainMenuPawns<=4;mainMenuPawns++){
-					ctx.globalAlpha=0.25;
-					ctx.drawImage(images["pawn"+mainMenuPawns],canvas.width/7*(1+mainMenuPawns)+144,canvas.height-384,192,192);
+					var pawnX = canvas.width/7*(1+mainMenuPawns);
+					var pawnY = 786;
+					var pawnXDiff = Math.abs((pawnX +192) - cPos.x);
+					var pawnYDiff = Math.abs((pawnY+192) - cPos.y);
+					var pawnPosDiff = pawnXDiff + pawnYDiff;
+					var pawnScale = Math.max(0,Math.min(0.25,0.25/192*(192-Math.min(192,pawnPosDiff))));
+					ctx.globalAlpha=0.75 + pawnScale;
+					ctx.save();
+					ctx.translate(pawnX + images["pawn"+mainMenuPawns].width/2 , pawnY + images["pawn"+mainMenuPawns].height/2);
+					//ctx.drawImage(images["smiley0"],0,0);
+					ctx.scale(1+pawnScale,1+pawnScale);
+					ctx.drawImage(images["pawn"+mainMenuPawns],-96,-96,192,192);
+					ctx.restore();
 					ctx.globalAlpha=1;
-					ctx.drawImage(images["smiley0"],canvas.width/7*(1+mainMenuPawns)+144+96-32,canvas.height-288);
 				}
+				
+				writeText("Minimum of the 2 players is required",canvas.width/2,1248,"32px sans-serif","#FFF","center");
 			break;
 		}
 	}
+	
+	$("canvas").click(function(e){
+		switch(gameStatus){
+			case "2.0":
+			case "2.1":
+			case "2.2":
+				dimming = 1;
+				gameStatus = "2.3";
+				loadingDots = canvas.width + 300;
+			break;
+			case "0.0":
+				if(cPos.y >= 384 && cPos.y < 576){
+					//
+				}
+			break;
+		}
+	}).mousemove(function(e){
+		cPos = {
+			"x" : Math.round((e.pageX-$("canvas").offset().left)/canvas.offsetWidth*canvas.width),
+			"y" : Math.round((e.pageY-$("canvas").offset().top)/canvas.offsetHeight*canvas.height)
+		};
+	});
 	
 	function loadImg(fileN,count){
 		count = count || 0;
