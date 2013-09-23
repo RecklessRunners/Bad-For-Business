@@ -106,8 +106,8 @@ $(function(){
 					var pawnXDiff = Math.abs((pawnX +192) - cPos.x);
 					var pawnYDiff = Math.abs((pawnY+192) - cPos.y);
 					var pawnPosDiff = pawnXDiff + pawnYDiff;
-					var pawnScale = Math.max(0,Math.min(0.25,0.25/192*(192-Math.min(192,pawnPosDiff))));
-					ctx.globalAlpha=0.75 + pawnScale;
+					var pawnScale = Math.max(0,Math.min(0.5,0.5/384*(384-Math.min(384,pawnPosDiff))));
+					ctx.globalAlpha=0.5 + pawnScale;
 					ctx.save();
 					ctx.translate(pawnX + images["pawn"+mainMenuPawns].width/2 , pawnY + images["pawn"+mainMenuPawns].height/2);
 					//ctx.drawImage(images["smiley0"],0,0);
